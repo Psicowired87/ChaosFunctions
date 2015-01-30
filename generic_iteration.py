@@ -83,3 +83,10 @@ def iterator_2xminus1(p0, n):
     sequence = generic_iteration(p0, iter_f, stop_f)
     return sequence
 
+
+def logistic_map(p0, n, r):
+    iter_f = lambda x: r*x*(1-x)
+    stop_f = lambda x: len(x) == n+1
+    sequence = generic_iteration(p0, iter_f, stop_f)
+    return sequence
+
