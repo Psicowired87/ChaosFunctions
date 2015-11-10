@@ -8,7 +8,7 @@ import numpy as np
 
 def generic_iteration(p0, iter_f, stop_f):
     """This functions implements a generic iterations. Repeat the given funcion
-    while the stopping condition is not 
+    while the stopping condition is not fulfilled.
 
     Parameters
     ---------
@@ -88,5 +88,14 @@ def logistic_map(p0, n, r):
     iter_f = lambda x: r*x*(1-x)
     stop_f = lambda x: len(x) == n+1
     sequence = generic_iteration(p0, iter_f, stop_f)
+    return sequence
+
+
+## Reformulate: two array iterations for the division
+def division_iter(p0, n, div):
+    i_cond = lambda y: 10*y[0] if y[0] < div else y[0]
+    iter_f = lambda x: np.array([int(i_cond(x))%int(div), int(i_cond(x))/int(div)])
+    stop_f = lambda x: x[-1][0] == 0 or len(x) == n+1
+    sequence = generic_iteration(p0, iter_f, stop_f)[:, 1]
     return sequence
 

@@ -5,17 +5,87 @@ a dynamics and to stop when it is considered enough.
 
 import numpy as np
 
+seq = logistic_map_bif_diagram(np.linspace(0,3,31), stationary_fixed_points)
+seq = logistic_map_bif_diagram(np.linspace(1,3.2,23), stationary_fixed_points)
+
+
+def logistic_map_bif_diagram(range_par, stop_f):
+    iter_f = lambda r: lambda x: r*x*(1-x)
+    sequence = obtain_bifurcation_diagram(iter_f, range_par, stop_f)
+    sequence = np.array(sequence)
+    sequence = sequence.reshape((sequence.reshape(-1).shape[0]/2, 2))
+    return sequence
+
+
+def obtain_bifurcation_diagram(iter_f, range_par, stop_f):
+
+    fixedp = []
+    for par in range_par:
+        print par
+        p0 = np.random.random()
+        iter_ff = iter_f(par)
+        sequence, fixed_points = generic_iteration_4_fixed_points(p0,
+                                                                  iter_ff,
+                                                                  stop_f)
+        fixedp.append([[par, fp] for fp in fixed_points])
+
+    return fixedp
+
+
+def generic_iteration_4_fixed_points(p0, iter_f, stop_f_and_fixedp):
+    """This functions implements a generic iterations. Repeat the given funcion
+    while the stopping condition is not fulfilled.
+
+    Parameters
+    ---------
+    p0 : float
+        intial point of the iteration
+    iter_f: function
+        function which receives a number and return a number. Decides the next
+        state of the system.
+    stop_f_and_fixedp: function
+        function which receives a list of numbers and return a boolean and a
+        fixed points. Decides the stoping condition.
+
+    """
+
+    sequence = []
+    fixed_points = None
+    p = p0
+    complete = False
+    while not complete:
+        sequence.append(p)
+        # Stop clause
+        complete, fixed_points = stop_f_and_fixedp(np.array(sequence))
+        # Transformation
+        p = iter_f(p)
+
+    sequence = np.array(sequence)
+    return sequence, fixed_points
+
 
 def stationary_fixed_points(history):
 
-    while not stationary:
-        s = embedding_matrix(history)
+    stationary = False
+    n_limit = int(np.sqrt(history.shape[0]))
+    fixed_points = np.array([])
+    if n_limit > 100:
+        return True, fixed_points
+    for order in range(1,n_limit+1):
+        s = embedding_matrix(history, order)
         stationary = decision_stationarity(s)
-    return
+        if stationary:
+            fixed_points = s[-1, :]
+            break
+    return stationary, fixed_points
 
 
 def decision_stationarity(seq):
-    return True
+    if seq.shape[0] <= 100:
+        decision = False
+    else:
+        decision = np.all(np.std(seq[-100:, ]) < 0.01)
+    return decision
 
 
 def embedding_matrix(seq, order):
