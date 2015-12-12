@@ -13,6 +13,7 @@ TODO
 import numpy as np
 import matplotlib.pyplot as plt
 from pythonUtils.parallel_tools import distribute_tasks, reshape_limits
+from plotting import image_building
 
 
 class FractalBuilder:
@@ -40,7 +41,8 @@ class FractalBuilder:
         return img
 
     def export_fractal(self, img, namefile):
-        image_building(img, namefile)
+        fig = image_building(img, namefile)
+        return fig
 
     def example_mandelbrot(self, ns=None, limits=None, itermax=100,
                            memlim=None):
@@ -108,11 +110,3 @@ def mandelbrot_iter(z, c):
     rem = np.abs(z) > 2.0
     return z, rem
 
-
-def image_building(I, name):
-    I[I == 0] = I.max() + 1
-    fig = plt.figure()
-    img = plt.imshow(I.T, origin='lower left')
-    if name is not None:
-        img.write_png(name+'.png', noscale=True)
-    return fig
