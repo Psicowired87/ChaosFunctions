@@ -26,7 +26,8 @@ class FractalBuilder:
     >>> ns = 10000, 10000
     >>> itermax = 400
     >>> limits = np.array([[-2, .5], [-1.25, 1.25]])
-    >>> img = iterator2d(mandelbrot_iter, ns, limits, itermax)
+    >>> fb = FractalBuilder(mandelbrot_iter)
+    >>> img = fb.build_fractal(ns, limits, itermax)
     >>> fig = image_building(img, 'prueba')
 
     """

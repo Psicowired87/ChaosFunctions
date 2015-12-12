@@ -60,7 +60,7 @@ def hasse_collatz(n):
 
     """
 
-    iter_f = lambda x: x/2 if x%2==0 else 3*x+1
+    iter_f = lambda x: x/2 if x % 2 == 0 else 3*x+1
     stop_f = lambda x: x[-1] == 1
     sequence = generic_iteration(n, iter_f, stop_f)
     return sequence
@@ -73,7 +73,7 @@ def iterator_x2minus1(p0, n):
     stop_f = lambda x: x[-1] == -1 and len(x) > n
     sequence = generic_iteration(p0, iter_f, stop_f)
     return sequence
-    
+
 
 def iterator_2xminus1(p0, n):
     """Chaotic iteration.
@@ -98,4 +98,3 @@ def division_iter(p0, n, div):
     stop_f = lambda x: x[-1][0] == 0 or len(x) == n+1
     sequence = generic_iteration(p0, iter_f, stop_f)[:, 1]
     return sequence
-
