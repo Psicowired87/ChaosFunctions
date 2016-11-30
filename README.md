@@ -39,7 +39,7 @@ fig = plot_sequence(sequence)
 import numpy as np
 from ChaosFunctions.fractals import FractalBuilder, mandelbrot_iter
 ns, itermax, limits = (1000, 1000), 400, np.array([[-2, .5], [-1.25, 1.25]])
-fb = FractalBuilder(mandelbrot_iter)
+fb = FractalBuilder(mandelbrot_iter, p0_mandelbrot)
 img = fb.build_fractal(ns, limits, itermax)
 fig = fb.export_fractal(img, 'prueba')
 ```
