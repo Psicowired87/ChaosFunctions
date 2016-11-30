@@ -5,11 +5,30 @@ a dynamics and to stop when it is considered enough.
 
 import numpy as np
 
-seq = logistic_map_bif_diagram(np.linspace(0,3,31), stationary_fixed_points)
-seq = logistic_map_bif_diagram(np.linspace(1,3.2,23), stationary_fixed_points)
-
 
 def logistic_map_bif_diagram(range_par, stop_f):
+    """Logistic map bifurcation diagram computation.
+
+    Parameters
+    ----------
+    range_par: list or np.ndarray
+        the parameters we want to compute.
+    stop_f: function
+        the stop condition.
+
+    Returns
+    -------
+    sequence: np.ndarray
+        the sequence information.
+
+    Example
+    -------
+    >>> y0 = np.linspace(0, 3, 31)
+    >>> y1 = np.linspace(1, 3.2, 23)
+    >>> seq = logistic_map_bif_diagram(y0, stationary_fixed_points)
+    >>> seq = logistic_map_bif_diagram(y1, stationary_fixed_points)
+
+    """
     iter_f = lambda r: lambda x: r*x*(1-x)
     sequence = obtain_bifurcation_diagram(iter_f, range_par, stop_f)
     sequence = np.array(sequence)
@@ -18,7 +37,23 @@ def logistic_map_bif_diagram(range_par, stop_f):
 
 
 def obtain_bifurcation_diagram(iter_f, range_par, stop_f):
+    """Compute the bifurcation diagram.
 
+    Parameters
+    ----------
+    iter_f: function
+        the iteration function.
+    range_par: list or np.ndarray
+        the parameters we want to compute.
+    stop_f: function
+        the stop condition.
+
+    Returns
+    -------
+    fixedp: list
+        the list of pair parameters and fixed points associated.
+
+    """
     fixedp = []
     for par in range_par:
         print par
@@ -47,8 +82,14 @@ def generic_iteration_4_fixed_points(p0, iter_f, stop_f_and_fixedp):
         function which receives a list of numbers and return a boolean and a
         fixed points. Decides the stoping condition.
 
-    """
+    Returns
+    -------
+    sequence: np.ndarray
+        the sequence information.
+    fixed_points: np.ndarray
+        the fixed points.
 
+    """
     sequence = []
     fixed_points = None
     p = p0
@@ -65,13 +106,28 @@ def generic_iteration_4_fixed_points(p0, iter_f, stop_f_and_fixedp):
 
 
 def stationary_fixed_points(history):
+    """Take the decision if the point is stationary. It runs for different
+    orders.
 
+    Parameters
+    ----------
+    sequence: np.ndarray
+        the sequence information.
+
+    Returns
+    -------
+    stationary: boolean
+        if the sequence is in a stationary point.
+    fixed_points: np.ndarray
+        the fixed points.
+
+    """
     stationary = False
     n_limit = int(np.sqrt(history.shape[0]))
     fixed_points = np.array([])
     if n_limit > 100:
         return True, fixed_points
-    for order in range(1,n_limit+1):
+    for order in range(1, n_limit+1):
         s = embedding_matrix(history, order)
         stationary = decision_stationarity(s)
         if stationary:
@@ -81,6 +137,20 @@ def stationary_fixed_points(history):
 
 
 def decision_stationarity(seq):
+    """Take the decision if the point is stationary. It only works for the
+    1st order fixed point.
+
+    Parameters
+    ----------
+    sequence: np.ndarray
+        the sequence information.
+
+    Returns
+    -------
+    decision: boolean
+        if the last state could be considered stationary.
+
+    """
     if seq.shape[0] <= 100:
         decision = False
     else:
@@ -89,7 +159,10 @@ def decision_stationarity(seq):
 
 
 def embedding_matrix(seq, order):
+    """
 
+
+    """
     embeded_m = sliding_embeded_transf(seq, 1, order, order)
     embeded_m = embeded_m[embeded_m[:, 0] != 0, :]
     return embeded_m

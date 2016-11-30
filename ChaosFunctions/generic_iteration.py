@@ -21,6 +21,11 @@ def generic_iteration(p0, iter_f, stop_f):
         function which receives a list of numbers and return a boolean.
         Decides the stoping condition.
 
+    Returns
+    -------
+    sequence: np.ndarray
+        the iterated sequence.
+
     TODO
     ----
     Processes with memory.
@@ -68,6 +73,19 @@ def hasse_collatz(n):
 
 def iterator_x2minus1(p0, n):
     """Stable two cycle attractor.
+
+    Parameters
+    ----------
+    p0: int
+        the initial point.
+    n: int
+        the number of iterations we want to compute.
+
+    Returns
+    -------
+    sequence: np.ndarray
+        the iterated sequence.
+
     """
     iter_f = lambda x: x**2-1
     stop_f = lambda x: x[-1] == -1 and len(x) > n
@@ -77,6 +95,19 @@ def iterator_x2minus1(p0, n):
 
 def iterator_2xminus1(p0, n):
     """Chaotic iteration.
+
+    Parameters
+    ----------
+    p0: int
+        the initial point.
+    n: int
+        the number of iterations we want to compute.
+
+    Returns
+    -------
+    sequence: np.ndarray
+        the iterated sequence.
+
     """
     iter_f = lambda x: 2*x**2-1
     stop_f = lambda x: len(x) == n+1
@@ -85,6 +116,23 @@ def iterator_2xminus1(p0, n):
 
 
 def logistic_map(p0, n, r):
+    """Logistic map iteration.
+
+    Parameters
+    ----------
+    p0: int
+        the initial point.
+    n: int
+        the number of iterations we want to compute.
+    r: float
+        the parameter of the logistic map. It is between 1 and 4.
+
+    Returns
+    -------
+    sequence: np.ndarray
+        the iterated sequence.
+
+    """
     iter_f = lambda x: r*x*(1-x)
     stop_f = lambda x: len(x) == n+1
     sequence = generic_iteration(p0, iter_f, stop_f)
@@ -93,8 +141,26 @@ def logistic_map(p0, n, r):
 
 ## Reformulate: two array iterations for the division
 def division_iter(p0, n, div):
+    """Division iteration.
+
+    Parameters
+    ----------
+    p0: int
+        the initial point.
+    n: int
+        the number of iterations we want to compute.
+    div: int
+        the number for which we want to divide the previous number.
+
+    Returns
+    -------
+    sequence: np.ndarray
+        the iterated sequence.
+
+    """
     i_cond = lambda y: 10*y[0] if y[0] < div else y[0]
-    iter_f = lambda x: np.array([int(i_cond(x))%int(div), int(i_cond(x))/int(div)])
+    iter_f = lambda x: np.array([int(i_cond(x)) % int(div),
+                                 int(i_cond(x))/int(div)])
     stop_f = lambda x: x[-1][0] == 0 or len(x) == n+1
     sequence = generic_iteration(p0, iter_f, stop_f)[:, 1]
     return sequence
